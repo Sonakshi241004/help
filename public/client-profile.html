@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Client Profile</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+      function init(){
+        let activeUser=localStorage.getItem("activeUser");
+        document.getElementById("txtEmail").value=activeUser;
+      }
+    </script>
+ <script>
+        
+        
+        $(document).ready(function(){
+            $("#search").click(function(){
+              
+               
+              //  alert(email);
+
+                let obj={
+                    type:"get",
+                    url:"/client-fetch",
+                    data:{
+                      x : $("#txtEmail").val(),   
+                    }
+                }
+
+                $.ajax(obj)
+                .then(function(responseInJsonAry)  //call back Function- jab response wapis aayega Khushi Khushi
+                {
+                    if(responseInJsonAry.length==0)
+                    {
+                        alert("Invalid Email Id");
+                      return;
+                    }
+                    else
+                    {
+                        // alert(JSON.stringify(responseInJsonAry));
+                        $("#txtName").val(responseInJsonAry[0].fullname);
+                         $("#txtBussi").val(responseInJsonAry[0].bussiness);
+                        $("#txtBussiprof").val(responseInJsonAry[0].bprofile);
+                        $("#txtAddr").val(responseInJsonAry[0].address);
+                         $("#txtCity").val(responseInJsonAry[0].city);
+
+                         $("#txtContact").val(responseInJsonAry[0].contact);
+                         $("#inputid").val(responseInJsonAry[0].idproof);
+                         $("#txtID").val(responseInJsonAry[0].idpnumber);
+                         $("#txtOthers").val(responseInJsonAry[0].info);
+                       
+                    }
+                    
+                    
+                }).fail(function(err) //Jab error on server side :-(
+                {
+                    alert(err.message)
+                })
+            })
+        });
+
+
+ </script>
+  </head>
+  <body onload="init();">
+    
+    <div class="container row mx-auto" style="width: 800px;" >
+    <form class="row g-3" method="post" action="/client-profile">
+        <div class="col-md-9">
+          <label for="txtEmail" class="form-label">Email</label>
+          <input type="email" name="txtEmail" class="form-control" id="txtEmail" disabled>
+        </div>
+        <div class="col-md-3">
+          <div class="col-md-3">
+            <label for="Search" class="form-label"> </label><br>
+          <button id="search" type="button" class="btn btn-secondary btn-lg">Fetch</button>
+        </div>
+        </div>
+        <div class="col-6">
+          <label for="txtName" class="form-label">Name</label>
+          <input type="text" name="txtName" class="form-control" id="txtName" placeholder="">
+        </div>
+        <div class="col-6">
+          <label for="txtBussi" class="form-label">Bussiness</label>
+          <input type="text" name="txtBussi" class="form-control" id="txtBussi" placeholder="">
+        </div>
+      
+        <div class="col-12">
+          <label for="txtBussiprof" class="form-label">Bussiness Profile</label>
+          <input type="text" name="txtBussiprof" class="form-control" id="txtBussiprof" placeholder="">
+        </div>
+
+        <div class="col-6">
+          <label for="txtAddr" class="form-label">Address</label>
+          <input type="text" name="txtAddr" class="form-control" id="txtAddr" placeholder="">
+        </div>
+        <div class="col-6">
+          <label for="txtCity" class="form-label">City</label>
+          <input type="text" name="txtCity" class="form-control" id="txtCity" placeholder="">
+        </div>
+        <div class="col-md-4">
+          <label for="txtContact" class="form-label">Contact No.</label>
+          <input type="text" name="txtContact" class="form-control" id="txtContact">
+        </div>
+        <div class="col-md-4">
+          <label for="inputid" class="form-label">ID Proof</label>
+          <select id="inputid" name="inputid" class="form-select">
+            <option selected>Choose...</option>
+            <option value="adhar">Adhar card</option>
+            <option value="pan">Pan Card</option>
+            <option value="license">Driving license</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="txtID" class="form-label">ID Number</label>
+          <input type="text" name="txtID" class="form-control" id="txtID">
+        </div>
+        <div class="col-12">
+          <label for="txtOthers" class="form-label">Other info.</label>
+          <textarea name="txtOthers"  id="txtOthers" class="form-control"></textarea>
+        </div>
+
+           
+         
+        <div class="col-12">
+          <center>
+          <button type="submit" class="btn btn-primary" formaction="/client-insert">Register</button>
+          <button type="submit" class="btn btn-primary" formaction="/client-update">Update</button>
+         </center>
+         <br><br>
+        </div>
+      </form>
+    </div>
+  </body>
+</html>
